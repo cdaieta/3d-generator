@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <title>Framework for generating video</title>
+
+    <!-- Babylon.js -->
+    <script src="https://code.jquery.com/pep/0.4.2/pep.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
+    <script src="https://preview.babylonjs.com/ammo.js"></script>
+    <script src="https://preview.babylonjs.com/cannon.js"></script>
+    <script src="https://preview.babylonjs.com/Oimo.js"></script>
+    <script src="https://preview.babylonjs.com/libktx.js"></script>
+    <script src="https://preview.babylonjs.com/earcut.min.js"></script>
+    <script src="https://preview.babylonjs.com/babylon.js"></script>
+    <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+    <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+    <script src="https://preview.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+    <script src="https://preview.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+    <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+    <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+
+    <style>
+        html,
+        body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="renderCanvas"></canvas>
+
+    <script src="utilities.js"></script>
+    <script src="meshes.js"></script>
+    <script src="init.js"></script>
+
+    <script>
+        var canvas = document.getElementById("renderCanvas");
+
+        // Config environment variables
+        var escala = 10;
+        var sizeOfWorld = 5000;
+        var widthDefaultFloor = sizeOfWorld;
+        var heightDefaultFloor = sizeOfWorld;
+
+        //Global Variables
+        var engine = null;
+        var scene = null;
+        var sphere = null;
+        var dude = null;
+        var camera = null;
+        var materials = [];
+        var mapMeshes = [];
+        var meshesLoaded = [];
+        var guion = null;
+
+        var allMeshesLoaded = false;
+
+        canvas.addEventListener("keydown", event => {
+            //"KeyS"
+            if (event.isComposing || event.keyCode === 83 ) {
+                allMeshesLoaded = true;
+            }
+        });
+
+        var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true }); };
+
+        var crearAmbiente = function () {
+
+            scene = new BABYLON.Scene(engine);
+
+            // This creates and positions a free camera (non-mesh)
+            camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 10, -50), scene);
+
+            // This targets the camera to scene origin
+            camera.setTarget(new BABYLON.Vector3(0, 10, 1));
+
+            // This attaches the camera to the canvas
+            camera.attachControl(canvas, true);
+
+            var light = new BABYLON.HemisphericLight("hemiLight", new BABYLON.Vector3(-5, 5, -10), scene);
+            light.diffuse = new BABYLON.Color3(1, 1, 1);
+
+            //const axis = new BABYLON.Debug.AxesViewer();
+
+            // Skybox
+            var skybox = createSkybox(scene);
+
+            loadMaterials(materials);
+            guion = obtenerGuion();
+            mapMeshes = loadMapMeshes();
+            mostrarEscenaInicial(guion);
+
+            // allMeshesLoaded = true;
+
+            return scene;
+        };
+
+        function mostrarEscenaInicial(guion) {
+
+            //dibujar piso del mundo
+            let groundWorld = BABYLON.MeshBuilder.CreateGround("ground of the world", { width: widthDefaultFloor, height: heightDefaultFloor }, scene);
+            groundWorld.position.x = 0;
+            groundWorld.position.y = -0.1;
+            groundWorld.position.z = 0;
+            groundWorld.material = materials[guion.materialDefault]
+
+            createRoads(guion, scene);
+        }
+
+        function createRoads(guion, scene) {
+            for (let index = 0; index < guion.zones.length; index++) {
+                const element = guion.zones[index];
+                for (let coordX = element.from.coordX; coordX <= element.to.coordX; coordX++) {
+                    if (element.gapX == null || mustShowByGap(coordX, element.gapX)) {
+                        for (let coordZ = element.from.coordZ; coordZ <= element.to.coordZ; coordZ++) {
+                            if (element.gapZ == null || mustShowByGap(coordZ, element.gapZ)) {
+                                if (element.mesh != null) console.log(element.mesh.model);
+                                crearCeldaCamino(coordX, coordZ, element);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function mustShowByGap(coord, gap) {
+            if (coord == 0) return false;
+
+            if (coord > 0) {
+                return ((coord % gap) - 1) == 0;
+            }
+
+            if (coord < 0) {
+                return (((coord * (-1)) % gap)) == 0;
+            }
+        }
+
+        function crearCeldaCamino(coordX, coordZ, element) {
+
+            // //Material of cell
+            if (element.material != null) {
+                //Crear piso
+                let ground = BABYLON.MeshBuilder.CreateGround("road:" + coordX + ":" + coordZ, { width: uToPx(1), height: uToPx(1) }, scene);
+
+                //Position of cell
+                ground.position.x = centroDeCelda(coordX);
+                ground.position.y = 0;
+                ground.position.z = centroDeCelda(coordZ);
+                ground.material = materials[element.material];
+            }
+
+            if (element.mesh != null) {
+                let mostrar = true;
+                if (element.mesh.probability != null) {
+                    let random = Math.random();
+                    if (random > (element.mesh.probability / 100)) {
+                        mostrar = false;
+                    }
+                }
+
+                if (mostrar) {
+                    meshInstance = loadMesh(element.mesh, coordX, coordZ);
+                    return meshInstance;
+                }
+            }
+        }
+
+        function introduccion() {
+            engine = createDefaultEngine();
+            if (!engine) {
+                throw 'engine should not be null.';
+            }
+
+            scene = crearAmbiente();
+
+            // Resize
+            window.addEventListener("resize", function () {
+                engine.resize();
+            });
+
+            engine.runRenderLoop(function () {
+                if (scene) {
+
+                    nudo();
+
+                    scene.render();
+                }
+            });
+        }
+
+        introduccion();
+
+        function nudo() {
+            for (let index = 0; index < meshesLoaded.length; index++) {
+                if (allMeshesLoaded && meshesLoaded[index].to) {
+                    let velocidad = 1;
+                    let meshLoaded = meshesLoaded[index];
+                    for (let j = 0; j < meshLoaded.meshes.length; j++) {
+                        //console.log("X - Mesh: %s - Move from %s to %s", meshLoaded.name, scene.meshes[meshLoaded.meshes[j]].position.x, centroDeCelda(meshesLoaded[index].to.coordX));
+                        //console.log("Z - Mesh: %s - Move from %s to %s", meshLoaded.name, scene.meshes[meshLoaded.meshes[j]].position.z, centroDeCelda(meshesLoaded[index].to.coordZ));
+                        vx = centroDeCelda(meshesLoaded[index].to.coordX) - scene.meshes[meshLoaded.meshes[j]].position.x;
+                        vy = 0;
+                        vz = centroDeCelda(meshesLoaded[index].to.coordZ) - scene.meshes[meshLoaded.meshes[j]].position.z;
+
+                        let versor = new BABYLON.Vector3(vx, vy, vz).normalize();
+                        //console.log(vx + "," + vy + "," + vz + ",versor=" + versor);
+
+                        scene.meshes[meshLoaded.meshes[j]].translate(versor, velocidad, BABYLON.Space.WORLD);
+                    }
+                }
+            }
+        }
+
+    </script>
+</body>
+
+</html>
