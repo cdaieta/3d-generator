@@ -49,6 +49,8 @@ function loadMesh(mesh, posX, posZ) {
             // Adds all elements to the scene
             container.addAllToScene();
 
+            console.log("Model %s loaded", mesh.model);
+
             //console.log("After: mesh.model=" + mesh.model + " - scene.meshes=" + scene.meshes.length + " - container.meshes=" + container.meshes.length);
         });
     }

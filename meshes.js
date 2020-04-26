@@ -34,6 +34,10 @@ var loadMapMeshes = function () {
             path: "./resources/meshes/gallina/",
             fileName: "chicken-01.glb"
         },
+        "vaca": {
+            path: "./resources/meshes/vaca/",
+            fileName: "vaca-01.glb"
+        },
         //Varios
         "granero": {
             path: "./resources/meshes/granero/",
@@ -50,6 +54,14 @@ var loadMapMeshes = function () {
         "nube": {
             path: "./resources/meshes/nube/",
             fileName: "cloud-01.glb"
+        },
+        "lago": {
+            path: "./resources/meshes/lago/",
+            fileName: "lake-02.glb"
+        },
+        "mountain": {
+            path: "./resources/meshes/mountain/",
+            fileName: "mountain-02.glb"
         },
     }
     return json;
