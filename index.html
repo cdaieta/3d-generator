@@ -55,6 +55,7 @@
         // Config environment variables
         var escala = 10;
         var sizeOfWorld = 5000;
+        var velocidadDefault = 1;
         var widthDefaultFloor = sizeOfWorld;
         var heightDefaultFloor = sizeOfWorld;
 
@@ -68,13 +69,20 @@
         var mapMeshes = [];
         var meshesLoaded = [];
         var guion = null;
+        var vectorCamera = null;
+        var xCam0, yCam0, zCam0 = null;
 
         var allMeshesLoaded = false;
+        var startCameraMovement = false;
 
         canvas.addEventListener("keydown", event => {
             //"KeyS"
-            if (event.isComposing || event.keyCode === 83 ) {
+            if (event.isComposing || event.keyCode === 83) {
                 allMeshesLoaded = true;
+            }
+            //"KeyC"
+            if (event.isComposing || event.keyCode === 83) {
+                startCameraMovement = true;
             }
         });
 
@@ -105,8 +113,6 @@
             guion = obtenerGuion();
             mapMeshes = loadMapMeshes();
             mostrarEscenaInicial(guion);
-
-            // allMeshesLoaded = true;
 
             return scene;
         };
@@ -207,10 +213,12 @@
         introduccion();
 
         function nudo() {
+
+            // Animation of meshes
             for (let index = 0; index < meshesLoaded.length; index++) {
                 if (allMeshesLoaded && meshesLoaded[index].to) {
-                    let velocidad = 1;
                     let meshLoaded = meshesLoaded[index];
+                    let velocity = velocidadDefault;
                     for (let j = 0; j < meshLoaded.meshes.length; j++) {
                         //console.log("X - Mesh: %s - Move from %s to %s", meshLoaded.name, scene.meshes[meshLoaded.meshes[j]].position.x, centroDeCelda(meshesLoaded[index].to.coordX));
                         //console.log("Z - Mesh: %s - Move from %s to %s", meshLoaded.name, scene.meshes[meshLoaded.meshes[j]].position.z, centroDeCelda(meshesLoaded[index].to.coordZ));
@@ -221,10 +229,56 @@
                         let versor = new BABYLON.Vector3(vx, vy, vz).normalize();
                         //console.log(vx + "," + vy + "," + vz + ",versor=" + versor);
 
+                        if (meshesLoaded[index].velocity != null) {
+                            velocidad = meshesLoaded[index].velocity;
+                        }
+                        else {
+                            velocidad = velocidadDefault;
+                        }
+
                         scene.meshes[meshLoaded.meshes[j]].translate(versor, velocidad, BABYLON.Space.WORLD);
                     }
                 }
             }
+
+            //Movement and rotation of camera
+            if (startCameraMovement && guion.cameraAnimation[0] != null) {
+                if (guion.cameraAnimation[0].state == null) {
+                    guion.cameraAnimation[0].state = "RUNNING";
+                    t0 = new Date();
+
+                    xCam0 = centroDeCelda(guion.cameraAnimation[0].from.position.camX);
+                    yCam0 = guion.cameraAnimation[0].from.position.camY;
+                    zCam0 = centroDeCelda(guion.cameraAnimation[0].from.position.camZ);
+                    
+                    camera.position = new BABYLON.Vector3(xCam0, yCam0, zCam0);
+
+                    console.log("Initial position: (%i, %i, %i)", xCam0, yCam0, zCam0);
+
+                    vCamX = centroDeCelda(guion.cameraAnimation[0].to.position.camX) - centroDeCelda(guion.cameraAnimation[0].from.position.camX);
+                    vCamY = guion.cameraAnimation[0].to.position.camY - guion.cameraAnimation[0].from.position.camY;
+                    vCamZ = centroDeCelda(guion.cameraAnimation[0].to.position.camZ) - centroDeCelda(guion.cameraAnimation[0].from.position.camZ);
+
+                    console.log("Total Vector: (%i, %i, %i)", vCamX, vCamY, vCamZ);
+                }
+
+                currentTime = new Date();
+                elapsedMilliseconds = currentTime.getTime() - t0.getTime();
+                if (elapsedMilliseconds > (guion.cameraAnimation[0].duration * 1000)) {
+                    guion.cameraAnimation.shift();
+                }
+                else {
+                    //Move the camera 
+                    proportionTime = elapsedMilliseconds / (guion.cameraAnimation[0].duration * 1000);
+                    console.log("BEF: proportionTime: %f, elapsedMilliseconds: %i, duration: %i", proportionTime, elapsedMilliseconds, guion.cameraAnimation[0].duration);
+                    console.log("BEF: Camera position: (%i, %i, %i)", camera.position.x, camera.position.y, camera.position.z);
+                    console.log("BEF: xCam0 + (vx * proportionTime): %i + (%i * %f)", xCam0, vCamX, proportionTime);
+                    camera.position = new BABYLON.Vector3(xCam0 + (vCamX * proportionTime), yCam0 + (vCamY * proportionTime), zCam0 + (vCamZ * proportionTime));
+                    console.log("AFT: Camera position: (%i, %i, %i)", camera.position.x, camera.position.y, camera.position.z);
+                    console.log("");
+                }
+            }
+
         }
 
     </script>

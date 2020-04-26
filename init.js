@@ -3,15 +3,45 @@ var obtenerGuion = function () {
         velocidad: 2,
         duracion: 10,
         materialDefault: "materialPisoDefault",
+        cameraAnimation: [
+            {
+                duration: 10,
+                from: {
+                    position: {
+                        camX: 1,
+                        camY: 5,
+                        camZ: -5
+                    },
+                    target: {
+                        camX: 10,
+                        camY: 5,
+                        camZ: 1
+                    }
+                },
+                to: {
+                    position: {
+                        camX: 100,
+                        camY: 100,
+                        camZ: -5
+                    },
+                    target: {
+                        camX: 10,
+                        camY: 15,
+                        camZ: 1
+                    },
+                }
+            }
+        ],
+
         zones: [
             {
                 material: "horizontalAsphalt",
                 from: {
-                    coordX: -500,
+                    coordX: -200,
                     coordZ: -1
                 },
                 to: {
-                    coordX: 500,
+                    coordX: 200,
                     coordZ: -1
                 }
             },
@@ -19,20 +49,20 @@ var obtenerGuion = function () {
                 material: "verticalAsphalt",
                 from: {
                     coordX: -1,
-                    coordZ: -500
+                    coordZ: -200
                 },
                 to: {
                     coordX: -1,
-                    coordZ: 500
+                    coordZ: 200
                 }
             },
             {
                 from: {
-                    coordX: -100,
+                    coordX: -50,
                     coordZ: 1
                 },
                 to: {
-                    coordX: 100,
+                    coordX: 50,
                     coordZ: 1
                 },
                 mesh: {
@@ -58,7 +88,7 @@ var obtenerGuion = function () {
             {
                 from: {
                     coordX: 1,
-                    coordZ: 1
+                    coordZ: 2
                 },
                 to: {
                     coordX: 10,
@@ -74,7 +104,7 @@ var obtenerGuion = function () {
             {
                 from: {
                     coordX: 10,
-                    coordZ: 1
+                    coordZ: 2
                 },
                 to: {
                     coordX: 20,
@@ -84,6 +114,23 @@ var obtenerGuion = function () {
                     model: "oveja",
                     posY: 0,
                     scale: 0.3,
+                    probability: 25
+                }
+            },
+            {
+                // material: "verticalAsphalt",
+                from: {
+                    coordX: 20,
+                    coordZ: 2
+                },
+                to: {
+                    coordX: 30,
+                    coordZ: 10
+                },
+                mesh: {
+                    model: "gallina",
+                    posY: 0,
+                    scale: 0.6,
                     probability: 25
                 }
             },
@@ -99,12 +146,12 @@ var obtenerGuion = function () {
                 mesh: {
                     model: "nube",
                     posY: 40,
-                    scale: 0.8,
+                    scale: 1,
                     to: {
                         coordX: 1000,
                         coordZ: 1000
                     },
-                     probability: 1
+                    probability: 1
                 },
                 gapX: 10,
                 gapZ: 10,
@@ -123,28 +170,28 @@ var obtenerGuion = function () {
                     posY: 15,
                     scale: 0.8,
                     to: {
-                        coordX: 100,
+                        coordX: 1000,
                         coordZ: 10
                     },
                 },
                 gapX: 10,
                 gapZ: 10,
-        },
+            },
             {
                 from: {
-                    coordX: -80,
+                    coordX: -200,
                     coordZ: 1
                 },
                 to: {
-                    coordX: -80,
+                    coordX: -200,
                     coordZ: 1
                 },
                 mesh: {
                     model: "avion",
-                    posY: 30,
+                    posY: 15,
                     scale: 0.8,
                     to: {
-                        coordX: 100,
+                        coordX: 1000,
                         coordZ: 1
                     },
                     rotation: {
@@ -154,7 +201,36 @@ var obtenerGuion = function () {
                     },
                     gapX: 2,
                     gapZ: 2,
-                    probability: 100
+                    probability: 100,
+                    velocity: 2
+                },
+            },
+            {
+                from: {
+                    coordX: -1,
+                    coordZ: 1
+                },
+                to: {
+                    coordX: -1,
+                    coordZ: 1
+                },
+                mesh: {
+                    model: "tractor",
+                    //posY: 0,
+                    scale: 0.2,
+                    to: {
+                        coordX: -1,
+                        coordZ: -100
+                    },
+                    rotation: {
+                        rX: 0,
+                        rY: 90,
+                        rZ: 0
+                    },
+                    gapX: 2,
+                    gapZ: 2,
+                    probability: 100,
+                    velocity: 1
                 },
             },
 

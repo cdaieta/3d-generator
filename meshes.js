@@ -11,7 +11,7 @@ var loadMapMeshes = function () {
         },
         "tractor": {
             path: "./resources/meshes/tractor/",
-            fileName: "tractor-01.glb"
+            fileName: "tractor-02.glb"
         },
         "globo": {
             path: "./resources/meshes/balloon/",
@@ -29,6 +29,10 @@ var loadMapMeshes = function () {
         "oveja": {
             path: "./resources/meshes/oveja/",
             fileName: "oveja-01.glb"
+        },
+        "gallina": {
+            path: "./resources/meshes/gallina/",
+            fileName: "chicken-01.glb"
         },
         //Varios
         "granero": {

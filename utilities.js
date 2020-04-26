@@ -28,21 +28,22 @@ function loadMesh(mesh, posX, posZ) {
                 meshLoaded.meshes.push(index);    
             }
             meshLoaded.to = mesh.to;
+            meshLoaded.velocity = mesh.velocity;
             meshesLoaded.push(meshLoaded);
 
             // Scale and move meshes
             for (let index = 0; index < meshes.length; index++) {
+                meshes[index].position.x += centroDeCelda(posX);
+                meshes[index].position.y += mesh.posY != null ? mesh.posY : 0;
+                meshes[index].position.z += centroDeCelda(posZ);
+
                 if (mesh.scale != null) {
                     meshes[index].scaling = new BABYLON.Vector3(mesh.scale, mesh.scale, mesh.scale);
                 }
 
-                if (mesh.rotation != null) {
-                    meshes[index].scaling = new BABYLON.Vector3(mesh.scale, mesh.scale, mesh.scale);
-                }
-
-                meshes[index].position.x += centroDeCelda(posX);
-                meshes[index].position.y += mesh.posY != null ? mesh.posY : 0;
-                meshes[index].position.z += centroDeCelda(posZ);
+                // if (mesh.rotation != null) {
+                //     meshes[index].scaling = new BABYLON.Vector3(mesh.scale, mesh.scale, mesh.scale);
+                // }
             }
 
             // Adds all elements to the scene
@@ -55,6 +56,7 @@ function loadMesh(mesh, posX, posZ) {
 
 function centroDeCelda(coordenada) {
     return coordenada < 0 ? coordenada * escala + escala / 2 : (coordenada - 1) * escala + escala / 2;
+    //return coordenada < 0 ? coordenada * escala : (coordenada - 1) * escala;
 }
 
 function uToPx(u) {
