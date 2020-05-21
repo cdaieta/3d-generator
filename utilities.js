@@ -12,9 +12,9 @@ function createSkybox(scene) {
 
 function loadMesh(mesh, posX, posZ) {
 
-    let meshLoaded = mapMeshes[mesh.model];
-    if (meshLoaded) {
-        BABYLON.SceneLoader.LoadAssetContainer(meshLoaded.path, meshLoaded.fileName, scene, function (container) {
+    let meshToLoad = mapMeshes[mesh.model];
+    if (meshToLoad) {
+        BABYLON.SceneLoader.LoadAssetContainer(meshToLoad.path, meshToLoad.fileName, scene, function (container) {
             let meshes = container.meshes;
             let materials = container.materials;
 
@@ -33,17 +33,16 @@ function loadMesh(mesh, posX, posZ) {
 
             // Scale and move meshes
             for (let index = 0; index < meshes.length; index++) {
-                meshes[index].position.x += centroDeCelda(posX);
-                meshes[index].position.y += mesh.posY != null ? mesh.posY : 0;
-                meshes[index].position.z += centroDeCelda(posZ);
+
+                let vx = centroDeCelda(posX);
+                let vy = mesh.posY != null ? mesh.posY : 0;
+                let vz = centroDeCelda(posZ);
+                meshes[index].translate(new BABYLON.Vector3(vx, vy, vz), 1, BABYLON.Space.WORLD);
 
                 if (mesh.scale != null) {
                     meshes[index].scaling = new BABYLON.Vector3(mesh.scale, mesh.scale, mesh.scale);
                 }
 
-                // if (mesh.rotation != null) {
-                //     meshes[index].scaling = new BABYLON.Vector3(mesh.scale, mesh.scale, mesh.scale);
-                // }
             }
 
             // Adds all elements to the scene
@@ -68,7 +67,7 @@ function uToPx(u) {
 function loadMaterials(materials) {
     //Creation of a repeated textured material
     var materialPisoDefault = new BABYLON.StandardMaterial("texturePlane", scene);
-    materialPisoDefault.diffuseTexture = new BABYLON.Texture("resources/textures/grass-02.jpg", scene);
+    materialPisoDefault.diffuseTexture = new BABYLON.Texture("resources/textures/grass-03.jpg", scene);
     materialPisoDefault.diffuseTexture.uScale = widthDefaultFloor;//Repeat 5 times on the Vertical Axes
     materialPisoDefault.diffuseTexture.vScale = heightDefaultFloor;//Repeat 5 times on the Horizontal Axes
     materialPisoDefault.backFaceCulling = false;//Always show the front and the back of an element

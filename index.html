@@ -14,7 +14,8 @@
     <script src="https://preview.babylonjs.com/Oimo.js"></script>
     <script src="https://preview.babylonjs.com/libktx.js"></script>
     <script src="https://preview.babylonjs.com/earcut.min.js"></script>
-    <script src="https://preview.babylonjs.com/babylon.js"></script>
+    <!-- <script src="https://preview.babylonjs.com/babylon.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babylonjs/4.2.0-alpha.13/babylon.max.js"></script>
     <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
     <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
     <script src="https://preview.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
@@ -46,8 +47,10 @@
     <canvas id="renderCanvas"></canvas>
 
     <script src="utilities.js"></script>
-    <script src="meshes.js"></script>
-    <script src="init.js"></script>
+    <!-- <script src="/resources/config/numeros/meshes.js"></script>
+    <script src="/resources/config/numeros/init.js"></script> -->
+    <script src="/resources/config/granja/meshes.js"></script>
+    <script src="/resources/config/granja/init.js"></script>
 
     <script>
         var canvas = document.getElementById("renderCanvas");
@@ -92,6 +95,8 @@
 
             scene = new BABYLON.Scene(engine);
 
+            scene.debugLayer.show();
+
             // This creates and positions a free camera (non-mesh)
             camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 10, -50), scene);
 
@@ -103,7 +108,7 @@
 
             //var light = new BABYLON.PointLight("pointLight", new BABYLON.Vector3(1, 10, 1), scene);
             //var light = new BABYLON.HemisphericLight("hemiLight", new BABYLON.Vector3(-5, 5, -10), scene);
-            var light = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, 1, 0), scene);
+            var light = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, 1, 1), scene);
             light.diffuse = new BABYLON.Color3(1, 1, 1);
 
             //const axis = new BABYLON.Debug.AxesViewer();
@@ -138,8 +143,7 @@
                     if (element.gapX == null || mustShowByGap(coordX, element.gapX)) {
                         for (let coordZ = element.from.coordZ; coordZ <= element.to.coordZ; coordZ++) {
                             if (element.gapZ == null || mustShowByGap(coordZ, element.gapZ)) {
-                                if (element.mesh != null) 
-                                {
+                                if (element.mesh != null) {
                                     console.log(element.mesh.model);
                                 }
                                 crearCeldaCamino(coordX, coordZ, element);
@@ -247,7 +251,7 @@
             }
 
             //Movement and rotation of camera
-            if (startCameraMovement && guion.cameraAnimation[0] != null) {
+            if (startCameraMovement && guion.cameraAnimation != null && guion.cameraAnimation[0] != null) {
                 if (guion.cameraAnimation[0].state == null) {
                     guion.cameraAnimation[0].state = "RUNNING";
                     t0 = new Date();

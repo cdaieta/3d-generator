@@ -209,12 +209,12 @@ var obtenerGuion = function () {
                 mesh: {
                     model: "nube",
                     posY: 40,
-                    scale: 0.5,
+                    scale: 0.75,
                     to: {
                         coordX: 1000,
                         coordZ: 1000
                     },
-                    probability: 10
+                    probability: 1
                 },
                 gapX: 10,
                 gapZ: 10,
