@@ -4,37 +4,62 @@ var obtenerGuion = function () {
         "duracion": 10,
         "materialDefault": "materialPisoDefault",
         "cameraAnimation": [
-            {
-                "duration": 2,
-                "from": {
-                    "position": {
-                        "camX": 1,
-                        "camY": 15,
-                        "camZ": -5
-                    },
-                    "target": {
-                        "camX": 1,
-                        "camY": 0,
-                        "camZ": 1
-                    }
-                },
-                "to": {
-                    "position": {
-                        "camX": 2,
-                        "camY": 5,
-                        "camZ": -2
-                    },
-                    "target": {
-                        "camX": 1,
-                        "camY": 5,
-                        "camZ": 1
-                    }
-                }
+        // Number 1
+            // Move camera to start
+            {   "duration": 1,  
+                "from": 
+                    { "position": { "camX": -2, "camY": 15, "camZ": -5 }, "target": { "camX": 20, "camY": 5, "camZ": 1 } }, 
+                "to": 
+                    { "position": { "camX": -2, "camY": 15, "camZ": -5 }, "target": { "camX": 1, "camY": 5, "camZ": 1 } } 
+            },
+            //Rotate camera to number 1
+            {   "duration": 0.5,  
+                "from": 
+                    { "position": { "camX": -2, "camY": 15, "camZ": -5 }, "target": { "camX": 1, "camY": 5, "camZ": 1 } } , 
+                "to": 
+                    { "position": { "camX": -1, "camY": 5, "camZ": -2 }, "target": { "camX": 1, "camY": 5, "camZ": 1 } } 
+            },
+            // Move camera to number 1
+            {   "duration": 1.5,  
+                "from": 
+                    { "position": { "camX": -1, "camY": 5, "camZ": -2 }, "target": { "camX": 1, "camY": 5, "camZ": 1 } } , 
+                "to": 
+                    { "position": { "camX": 2, "camY": 5, "camZ": -3 }, "target": { "camX": 1, "camY": 5, "camZ": 1 } }
+            },
+        // Number 2
+            //Rotate camera to number 2
+            {   "duration": 0.5,  
+                "from": 
+                    { "position": { "camX": 2, "camY": 5, "camZ": -3 }, "target": { "camX": 1, "camY": 5, "camZ": 1 } }, 
+                "to": 
+                    { "position": { "camX": 3, "camY": 5, "camZ": -2 }, "target": { "camX": 3, "camY": 5, "camZ": 1 } } 
+            },
+            // Move camera to number 2
+            {   "duration": 2.5,  
+                "from": 
+                    { "position": { "camX": 3, "camY": 5, "camZ": -2 }, "target": { "camX": 3, "camY": 5, "camZ": 1 } }, 
+                "to": 
+                    { "position": { "camX": 4, "camY": 5, "camZ": -3 }, "target": { "camX": 3, "camY": 5, "camZ": 1 } } 
+            },
+        // Number 3
+            //Rotate camera to number 3
+            {   "duration": 0.5,  
+                "from": 
+                    { "position": { "camX": 4, "camY": 5, "camZ": -3 }, "target": { "camX": 3, "camY": 5, "camZ": 1 } }, 
+                "to": 
+                    { "position": { "camX": 5, "camY": 5, "camZ": -2 }, "target": { "camX": 5, "camY": 5, "camZ": 1 } } 
+            },
+            // Move camera to number 3
+            {   "duration": 2.5,  
+                "from": 
+                    { "position": { "camX": 5, "camY": 5, "camZ": -2 }, "target": { "camX": 5, "camY": 5, "camZ": 1 } }, 
+                "to": 
+                    { "position": { "camX": 6, "camY": 5, "camZ": -3 }, "target": { "camX": 5, "camY": 5, "camZ": 1 } } 
             }
         ],
         "zones": [
             {
-                "material": "verticalAsphalt",
+                "material": "horizontalAsphalt",
                 "from": {
                     "coordX": -200,
                     "coordZ": -1
@@ -43,7 +68,6 @@ var obtenerGuion = function () {
                     "coordX": 200,
                     "coordZ": 1
                 },
-                "gapX": 2
             },
             {
                 "material": "viaVertical",
@@ -187,21 +211,6 @@ var obtenerGuion = function () {
                 },
                 "mesh": {
                     "model": "numero-9",
-                    "posY": 0,
-                    "scale": 1
-                }
-            },
-            {
-                "from": {
-                    "coordX": 10,
-                    "coordZ": 1
-                },
-                "to": {
-                    "coordX": 10,
-                    "coordZ": 1
-                },
-                "mesh": {
-                    "model": "numero-10",
                     "posY": 0,
                     "scale": 1
                 }

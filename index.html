@@ -47,10 +47,10 @@
     <canvas id="renderCanvas"></canvas>
 
     <script src="utilities.js"></script>
-    <!-- <script src="/resources/config/numeros/meshes.js"></script>
-    <script src="/resources/config/numeros/init.js"></script> -->
-    <script src="/resources/config/granja/meshes.js"></script>
-    <script src="/resources/config/granja/init.js"></script>
+    <script src="/resources/config/numeros/meshes.js"></script>
+    <script src="/resources/config/numeros/init.js"></script>
+    <!-- <script src="/resources/config/granja/meshes.js"></script>
+    <script src="/resources/config/granja/init.js"></script> -->
 
     <script>
         var canvas = document.getElementById("renderCanvas");
@@ -95,7 +95,7 @@
 
             scene = new BABYLON.Scene(engine);
 
-            scene.debugLayer.show();
+            //scene.debugLayer.show();
 
             // This creates and positions a free camera (non-mesh)
             camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 10, -50), scene);
@@ -108,7 +108,7 @@
 
             //var light = new BABYLON.PointLight("pointLight", new BABYLON.Vector3(1, 10, 1), scene);
             //var light = new BABYLON.HemisphericLight("hemiLight", new BABYLON.Vector3(-5, 5, -10), scene);
-            var light = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, 1, 1), scene);
+            var light = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(50,25,10), scene);
             light.diffuse = new BABYLON.Color3(1, 1, 1);
 
             //const axis = new BABYLON.Debug.AxesViewer();
