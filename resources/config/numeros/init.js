@@ -1,38 +1,38 @@
 var obtenerGuion = function () {
     let json = {
-        "velocidad": 2,
+        "velocidad": 1,
         "duracion": 10,
         "materialDefault": "materialPisoDefault",
         "cameraAnimation": [
             // General Panorama
-            {   "duration": 10,  
+            {   "duration": 5,  
                 "from": 
-                    { "position": { "camX": 10, "camY": 5, "camZ": -12 }, "target": { "camX": 10, "camY": 5, "camZ": 1 } }, 
+                    { "position": { "camX": 11, "camY": 5, "camZ": -12 }, "target": { "camX": 11, "camY": 5, "camZ": 1 } }, 
                 "to": 
-                    { "position": { "camX": 10, "camY": 30, "camZ": -15 }, "target": { "camX": 10, "camY": 5, "camZ": 1 } } 
+                    { "position": { "camX": 11, "camY": 30, "camZ": -15 }, "target": { "camX": 11, "camY": 5, "camZ": 1 } } 
             },
             // General Panorama from right to left
             {   "duration": 2.5,  
                 "from": 
                     { "position": { "camX": -2, "camY": 15, "camZ": -10 }, "target": { "camX": 10, "camY": 5, "camZ": 1 } }, 
                 "to": 
-                    { "position": { "camX": -2, "camY": 15, "camZ": -10 }, "target": { "camX": 5, "camY": 5, "camZ": 1 } } 
+                    { "position": { "camX": 2, "camY": 14, "camZ": -10 }, "target": { "camX": 8, "camY": 5, "camZ": 1 } } 
             },
             // General Panorama from left to right
             {   "duration": 2.5,  
                 "from": 
-                    { "position": { "camX": 22, "camY": 15, "camZ": -10 }, "target": { "camX": 5, "camY": 5, "camZ": 1 } }, 
+                    { "position": { "camX": 22, "camY": 15, "camZ": -10 }, "target": { "camX": 10, "camY": 5, "camZ": 1 } }, 
                 "to": 
-                    { "position": { "camX": 22, "camY": 15, "camZ": -10 }, "target": { "camX": 10, "camY": 5, "camZ": 1 } } 
+                    { "position": { "camX": 21, "camY": 14, "camZ": -10 }, "target": { "camX": 15, "camY": 5, "camZ": 1 } } 
             },
             // General Panorama from left to right
-            {   "duration": 5,  
+            {   "duration": 10,  
                 "from": 
                     { "position": { "camX": 1, "camY": 10, "camZ": -5 }, "target": { "camX": 1, "camY": 5, "camZ": 1 } }, 
                 "to": 
                     { "position": { "camX": 20, "camY": 10, "camZ": -5 }, "target": { "camX": 20, "camY": 5, "camZ": 1 } } 
             },
-/*
+
         // Number 1
             // Move camera to start
             {   "duration": 2.5,  
@@ -85,7 +85,7 @@ var obtenerGuion = function () {
                 "to": 
                     { "position": { "camX": 6, "camY": 5, "camZ": -3 }, "target": { "camX": 5, "camY": 5, "camZ": 1 } } 
             }
-*/
+
         ],
         "zones": [
             {

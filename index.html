@@ -89,6 +89,10 @@
             //"KeyP"
             if (event.isComposing || event.keyCode === 80) {
                 moveCamera = !moveCamera;
+                if (moveCamera)
+                {
+                    lastElapsedTime = new Date();
+                }
             }
         });
 
@@ -111,7 +115,7 @@
 
             //var light = new BABYLON.PointLight("pointLight", new BABYLON.Vector3(1, 10, 1), scene);
             //var light = new BABYLON.HemisphericLight("hemiLight", new BABYLON.Vector3(-5, 5, -10), scene);
-            var light = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(1,15,1), scene);
+            var light = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(1, 15, 1), scene);
             light.diffuse = new BABYLON.Color3(1, 1, 1);
 
             //const axis = new BABYLON.Debug.AxesViewer();
@@ -253,19 +257,21 @@
                 }
             }
 
-            if (loadCameraMovements)
-            {
+            if (loadCameraMovements) {
                 movimientosDeCamara = obtenerGuion().cameraAnimation;
                 loadCameraMovements = false;
             }
 
             //Movement and rotation of camera
             if (moveCamera && movimientosDeCamara != null && movimientosDeCamara[0] != null) {
+                currentTime = new Date();
+
                 if (movimientosDeCamara[0].state == null) {
                     movimientosDeCamara[0].state = "RUNNING";
 
-                    lastElapsedTime = new Date();
+                    lastElapsedTime = currentTime;
                     elapsedMilliseconds = 0;
+                    console.log("BEF: start of camera scene: currentTime: %s, duration: %i", currentTime, movimientosDeCamara[0].duration);
 
                     //Position of Camera
                     positionCameraInitialX = centroDeCelda(movimientosDeCamara[0].from.position.camX);
@@ -290,22 +296,22 @@
                     vectorTargetCameraZ = centroDeCelda(movimientosDeCamara[0].to.target.camZ) - centroDeCelda(movimientosDeCamara[0].from.target.camZ);
                 }
 
-                currentTime = new Date();
-
+                //console.log("BEF: elapsedMilliseconds: %f, currentTime.getTime(): %s, lastElapsedTime.getTime(): %s", elapsedMilliseconds, currentTime.getTime(), lastElapsedTime.getTime());
                 elapsedMilliseconds = elapsedMilliseconds + (currentTime.getTime() - lastElapsedTime.getTime());
 
                 if (elapsedMilliseconds > (movimientosDeCamara[0].duration * 1000)) {
+                    console.log("BEF: end of camera scene: currentTime: %s, duration: %i, elapsedMilliseconds: %i", currentTime, movimientosDeCamara[0].duration, elapsedMilliseconds);
                     movimientosDeCamara.shift();
                 }
                 else {
                     //Change the position of camera 
                     proportionTime = elapsedMilliseconds / (movimientosDeCamara[0].duration * 1000);
-                    console.log("BEF: proportionTime: %f, elapsedMilliseconds: %i, duration: %i", proportionTime, elapsedMilliseconds, movimientosDeCamara[0].duration);
-                    console.log("BEF: Camera position: (%i, %i, %i)", camera.position.x, camera.position.y, camera.position.z);
-                    console.log("BEF: positionCameraInitialX + (vx * proportionTime): %i + (%i * %f)", positionCameraInitialX, vectorPositionCameraX, proportionTime);
+                    //console.log("BEF: proportionTime: %f, elapsedMilliseconds: %i, duration: %i", proportionTime, elapsedMilliseconds, movimientosDeCamara[0].duration);
+                    //console.log("BEF: Camera position: (%i, %i, %i)", camera.position.x, camera.position.y, camera.position.z);
+                    //console.log("BEF: positionCameraInitialX + (vx * proportionTime): %i + (%i * %f)", positionCameraInitialX, vectorPositionCameraX, proportionTime);
                     camera.position = new BABYLON.Vector3(positionCameraInitialX + (vectorPositionCameraX * proportionTime), positionCameraInitialY + (vectorPositionCameraY * proportionTime), positionCameraInitialZ + (vectorPositionCameraZ * proportionTime));
-                    console.log("AFT: Camera position: (%i, %i, %i)", camera.position.x, camera.position.y, camera.position.z);
-                    console.log("");
+                    //console.log("AFT: Camera position: (%i, %i, %i)", camera.position.x, camera.position.y, camera.position.z);
+                    //console.log("");
 
                     //Change the target of camera
                     camera.setTarget(new BABYLON.Vector3(
@@ -313,6 +319,7 @@
                         targetCameraInitialY + (vectorTargetCameraY * proportionTime),
                         targetCameraInitialZ + (vectorTargetCameraZ * proportionTime)
                     ));
+                    lastElapsedTime = currentTime;
                 }
             }
 
