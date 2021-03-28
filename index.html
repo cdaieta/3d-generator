@@ -7,22 +7,19 @@
     <title>Framework for generating video</title>
 
     <!-- Babylon.js -->
-    <script src="https://code.jquery.com/pep/0.4.2/pep.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
     <script src="https://preview.babylonjs.com/ammo.js"></script>
     <script src="https://preview.babylonjs.com/cannon.js"></script>
     <script src="https://preview.babylonjs.com/Oimo.js"></script>
-    <script src="https://preview.babylonjs.com/libktx.js"></script>
     <script src="https://preview.babylonjs.com/earcut.min.js"></script>
-    <!-- <script src="https://preview.babylonjs.com/babylon.js"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babylonjs/4.2.0-alpha.13/babylon.max.js"></script>
-    <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+    <script src="https://preview.babylonjs.com/babylon.js"></script>
     <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
     <script src="https://preview.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
     <script src="https://preview.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
     <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
     <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
     <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+    <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
 
     <style>
         html,
@@ -47,10 +44,12 @@
     <canvas id="renderCanvas"></canvas>
 
     <script src="utilities.js"></script>
-    <script src="/resources/config/numeros/meshes.js"></script>
-    <script src="/resources/config/numeros/init.js"></script>
-    <!-- <script src="/resources/config/granja/meshes.js"></script>
-    <script src="/resources/config/granja/init.js"></script> -->
+    <!-- <script src="/resources/config/globo/meshes.js"></script>
+    <script src="/resources/config/globo/init.js"></script> -->
+    <!-- <script src="/resources/config/numeros/meshes.js"></script>
+    <script src="/resources/config/numeros/init.js"></script> -->
+    <script src="/resources/config/granja/meshes.js"></script>
+    <script src="/resources/config/granja/init.js"></script>
 
     <script>
         var canvas = document.getElementById("renderCanvas");
@@ -89,8 +88,7 @@
             //"KeyP"
             if (event.isComposing || event.keyCode === 80) {
                 moveCamera = !moveCamera;
-                if (moveCamera)
-                {
+                if (moveCamera) {
                     lastElapsedTime = new Date();
                 }
             }
@@ -231,28 +229,31 @@
         function nudo() {
 
             // Animation of meshes
-            for (let index = 0; index < meshesLoaded.length; index++) {
-                if (startObjectsMovement && meshesLoaded[index].to) {
-                    let meshLoaded = meshesLoaded[index];
-                    let velocity = velocidadDefault;
-                    for (let j = 0; j < meshLoaded.meshes.length; j++) {
-                        //console.log("X - Mesh: %s - Move from %s to %s", meshLoaded.name, scene.meshes[meshLoaded.meshes[j]].position.x, centroDeCelda(meshesLoaded[index].to.coordX));
-                        //console.log("Z - Mesh: %s - Move from %s to %s", meshLoaded.name, scene.meshes[meshLoaded.meshes[j]].position.z, centroDeCelda(meshesLoaded[index].to.coordZ));
-                        vx = centroDeCelda(meshesLoaded[index].to.coordX) - scene.meshes[meshLoaded.meshes[j]].position.x;
-                        vy = 0;
-                        vz = centroDeCelda(meshesLoaded[index].to.coordZ) - scene.meshes[meshLoaded.meshes[j]].position.z;
+            if (startObjectsMovement) {
 
-                        let versor = new BABYLON.Vector3(vx, vy, vz).normalize();
-                        //console.log(vx + "," + vy + "," + vz + ",versor=" + versor);
+                for (let index = 0; index < meshesLoaded.length; index++) {
+                    if (meshesLoaded[index].to) {
+                        let meshLoaded = meshesLoaded[index];
+                        let velocity = velocidadDefault;
+                        for (let j = 0; j < meshLoaded.meshes.length; j++) {
+                            //console.log("X - Mesh: %s - Move from %s to %s", meshLoaded.name, scene.meshes[meshLoaded.meshes[j]].position.x, centroDeCelda(meshesLoaded[index].to.coordX));
+                            //console.log("Z - Mesh: %s - Move from %s to %s", meshLoaded.name, scene.meshes[meshLoaded.meshes[j]].position.z, centroDeCelda(meshesLoaded[index].to.coordZ));
+                            vx = centroDeCelda(meshesLoaded[index].to.coordX) - scene.meshes[meshLoaded.meshes[j]].position.x;
+                            vy = 0;
+                            vz = centroDeCelda(meshesLoaded[index].to.coordZ) - scene.meshes[meshLoaded.meshes[j]].position.z;
 
-                        if (meshesLoaded[index].velocity != null) {
-                            velocidad = meshesLoaded[index].velocity;
+                            let versor = new BABYLON.Vector3(vx, vy, vz).normalize();
+                            //console.log(vx + "," + vy + "," + vz + ",versor=" + versor);
+
+                            if (meshesLoaded[index].velocity != null) {
+                                velocidad = meshesLoaded[index].velocity;
+                            }
+                            else {
+                                velocidad = velocidadDefault;
+                            }
+
+                            scene.meshes[meshLoaded.meshes[j]].translate(versor, velocidad, BABYLON.Space.WORLD);
                         }
-                        else {
-                            velocidad = velocidadDefault;
-                        }
-
-                        scene.meshes[meshLoaded.meshes[j]].translate(versor, velocidad, BABYLON.Space.WORLD);
                     }
                 }
             }
