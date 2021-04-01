@@ -7,21 +7,20 @@
     <title>Framework for generating video</title>
 
     <!-- Babylon.js -->
-    <script src="https://code.jquery.com/pep/0.4.2/pep.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
     <script src="https://preview.babylonjs.com/ammo.js"></script>
     <script src="https://preview.babylonjs.com/cannon.js"></script>
     <script src="https://preview.babylonjs.com/Oimo.js"></script>
-    <script src="https://preview.babylonjs.com/libktx.js"></script>
     <script src="https://preview.babylonjs.com/earcut.min.js"></script>
     <script src="https://preview.babylonjs.com/babylon.js"></script>
-    <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
     <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
     <script src="https://preview.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
     <script src="https://preview.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
     <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
     <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
     <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+    <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+    <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
 
     <style>
         html,
@@ -43,11 +42,15 @@
 
 <body>
 
-    <canvas id="renderCanvas"></canvas>
+    <canvas id="renderCanvas" touch-action="none"></canvas>
 
     <script src="utilities.js"></script>
-    <script src="meshes.js"></script>
-    <script src="init.js"></script>
+    <script src="/resources/config/globo/meshes.js"></script>
+    <script src="/resources/config/globo/init.js"></script>
+    <!-- <script src="/resources/config/numeros/meshes.js"></script>
+    <script src="/resources/config/numeros/init.js"></script> -->
+    <!-- <script src="/resources/config/granja/meshes.js"></script>
+    <script src="/resources/config/granja/init.js"></script> -->
 
     <script>
         var canvas = document.getElementById("renderCanvas");
@@ -55,6 +58,7 @@
         // Config environment variables
         var escala = 10;
         var sizeOfWorld = 5000;
+        var velocidadDefault = 1;
         var widthDefaultFloor = sizeOfWorld;
         var heightDefaultFloor = sizeOfWorld;
 
@@ -67,14 +71,29 @@
         var materials = [];
         var mapMeshes = [];
         var meshesLoaded = [];
+        var currentCameraTarget = null;
         var guion = null;
+        var vectorCamera = null;
+        var positionCameraInitialX, positionCameraInitialY, positionCameraInitialZ = null;
 
-        var allMeshesLoaded = false;
+        var versorTarget = null;
+        var startObjectsMovement = true;
+        var moveCamera = true;
+        var loadCameraMovements = true;
 
         canvas.addEventListener("keydown", event => {
             //"KeyS"
-            if (event.isComposing || event.keyCode === 83 ) {
-                allMeshesLoaded = true;
+            if (event.isComposing || event.keyCode === 83) {
+                startObjectsMovement = true;
+                moveCamera = true;
+                loadCameraMovements = true;
+            }
+            //"KeyP"
+            if (event.isComposing || event.keyCode === 80) {
+                moveCamera = !moveCamera;
+                if (moveCamera) {
+                    lastElapsedTime = new Date();
+                }
             }
         });
 
@@ -86,17 +105,19 @@
 
             // This creates and positions a free camera (non-mesh)
             camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 10, -50), scene);
+            camera.minY = 1;
 
             // This targets the camera to scene origin
-            camera.setTarget(new BABYLON.Vector3(0, 10, 1));
+            camera.setTarget(new BABYLON.Vector3(0, 0, 1));
+            versorTarget = new BABYLON.Vector3(camera.target.x, camera.target.y, camera.target.z).normalize();
 
             // This attaches the camera to the canvas
             camera.attachControl(canvas, true);
 
-            var light = new BABYLON.HemisphericLight("hemiLight", new BABYLON.Vector3(-5, 5, -10), scene);
+            //var light = new BABYLON.PointLight("pointLight", new BABYLON.Vector3(1, 10, 1), scene);
+            //var light = new BABYLON.HemisphericLight("hemiLight", new BABYLON.Vector3(-5, 5, -10), scene);
+            var light = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(1, 15, 1), scene);
             light.diffuse = new BABYLON.Color3(1, 1, 1);
-
-            //const axis = new BABYLON.Debug.AxesViewer();
 
             // Skybox
             var skybox = createSkybox(scene);
@@ -106,7 +127,32 @@
             mapMeshes = loadMapMeshes();
             mostrarEscenaInicial(guion);
 
-            // allMeshesLoaded = true;
+            scene.onPointerObservable.add((pointerInfo) => {
+                switch (pointerInfo.type) {
+                    case BABYLON.PointerEventTypes.POINTERDOWN:
+                        console.log("POINTER DOWN");
+                        break;
+                    case BABYLON.PointerEventTypes.POINTERUP:
+                        versorTarget = new BABYLON.Vector3(camera.target.x - camera.position.x, camera.target.y - camera.position.y, camera.target.z - camera.position.z).normalize();
+                        console.log("POINTER UP");
+                        break;
+                    case BABYLON.PointerEventTypes.POINTERMOVE:
+                        console.log("POINTER MOVE");
+                        break;
+                    case BABYLON.PointerEventTypes.POINTERWHEEL:
+                        console.log("POINTER WHEEL");
+                        break;
+                    case BABYLON.PointerEventTypes.POINTERPICK:
+                        console.log("POINTER PICK");
+                        break;
+                    case BABYLON.PointerEventTypes.POINTERTAP:
+                        console.log("POINTER TAP");
+                        break;
+                    case BABYLON.PointerEventTypes.POINTERDOUBLETAP:
+                        console.log("POINTER DOUBLE-TAP");
+                        break;
+                }
+            });
 
             return scene;
         };
@@ -130,7 +176,9 @@
                     if (element.gapX == null || mustShowByGap(coordX, element.gapX)) {
                         for (let coordZ = element.from.coordZ; coordZ <= element.to.coordZ; coordZ++) {
                             if (element.gapZ == null || mustShowByGap(coordZ, element.gapZ)) {
-                                if (element.mesh != null) console.log(element.mesh.model);
+                                if (element.mesh != null) {
+                                    console.log(element.mesh.model);
+                                }
                                 crearCeldaCamino(coordX, coordZ, element);
                             }
                         }
@@ -207,24 +255,46 @@
         introduccion();
 
         function nudo() {
-            for (let index = 0; index < meshesLoaded.length; index++) {
-                if (allMeshesLoaded && meshesLoaded[index].to) {
-                    let velocidad = 1;
-                    let meshLoaded = meshesLoaded[index];
-                    for (let j = 0; j < meshLoaded.meshes.length; j++) {
-                        //console.log("X - Mesh: %s - Move from %s to %s", meshLoaded.name, scene.meshes[meshLoaded.meshes[j]].position.x, centroDeCelda(meshesLoaded[index].to.coordX));
-                        //console.log("Z - Mesh: %s - Move from %s to %s", meshLoaded.name, scene.meshes[meshLoaded.meshes[j]].position.z, centroDeCelda(meshesLoaded[index].to.coordZ));
-                        vx = centroDeCelda(meshesLoaded[index].to.coordX) - scene.meshes[meshLoaded.meshes[j]].position.x;
-                        vy = 0;
-                        vz = centroDeCelda(meshesLoaded[index].to.coordZ) - scene.meshes[meshLoaded.meshes[j]].position.z;
 
-                        let versor = new BABYLON.Vector3(vx, vy, vz).normalize();
-                        //console.log(vx + "," + vy + "," + vz + ",versor=" + versor);
+            // Animation of meshes
+            if (startObjectsMovement) {
 
-                        scene.meshes[meshLoaded.meshes[j]].translate(versor, velocidad, BABYLON.Space.WORLD);
+                for (let index = 0; index < meshesLoaded.length; index++) {
+                    if (meshesLoaded[index].to) {
+                        let meshLoaded = meshesLoaded[index];
+                        let velocity = velocidadDefault;
+                        for (let j = 0; j < meshLoaded.meshes.length; j++) {
+                            //console.log("X - Mesh: %s - Move from %s to %s", meshLoaded.name, scene.meshes[meshLoaded.meshes[j]].position.x, centroDeCelda(meshesLoaded[index].to.coordX));
+                            //console.log("Z - Mesh: %s - Move from %s to %s", meshLoaded.name, scene.meshes[meshLoaded.meshes[j]].position.z, centroDeCelda(meshesLoaded[index].to.coordZ));
+                            vx = centroDeCelda(meshesLoaded[index].to.coordX) - scene.meshes[meshLoaded.meshes[j]].position.x;
+                            vy = 0;
+                            vz = centroDeCelda(meshesLoaded[index].to.coordZ) - scene.meshes[meshLoaded.meshes[j]].position.z;
+
+                            let versor = new BABYLON.Vector3(vx, vy, vz).normalize();
+                            //console.log(vx + "," + vy + "," + vz + ",versor=" + versor);
+
+                            if (meshesLoaded[index].velocity != null) {
+                                velocidad = meshesLoaded[index].velocity;
+                            }
+                            else {
+                                velocidad = velocidadDefault;
+                            }
+
+                            scene.meshes[meshLoaded.meshes[j]].translate(versor, velocidad, BABYLON.Space.WORLD);
+                        }
                     }
                 }
             }
+
+            //Camera 
+            // let versorTarget = new BABYLON.Vector3(camera.target.x, camera.target.y, camera.target.z).normalize();
+            if (camera.position.y + versorTarget.y > 2)
+            {
+                camera.position = new BABYLON.Vector3(camera.position.x + versorTarget.x, camera.position.y + versorTarget.y, camera.position.z + versorTarget.z);
+            }
+            
+            // camera.setTarget(new BABYLON.Vector3(targetCameraInitialX, targetCameraInitialY, targetCameraInitialZ));
+
         }
 
     </script>
