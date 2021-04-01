@@ -7,25 +7,6 @@ var obtenerGuion = function () {
 
         zones: [
             {
-                from: {
-                    coordX: 100,
-                    coordZ: 1000
-                },
-                to: {
-                    coordX: 2000,
-                    coordZ: 1000
-                },
-                mesh: {
-                    model: "mountain",
-                    posY: 0,
-                    scale: 0.9,
-                    probability: 50
-                },
-                gapX: 100,
-                // gapZ: 2
-
-            },
-            {
                 material: "horizontalAsphalt",
                 from: {
                     coordX: -200,
@@ -54,7 +35,7 @@ var obtenerGuion = function () {
                 },
                 to: {
                     coordX: 50,
-                    coordZ: 2
+                    coordZ: -2
                 },
                 mesh: {
                     model: "molino",
@@ -62,7 +43,7 @@ var obtenerGuion = function () {
                     scale: 0.1
                 },
                 gapX: 5,
-                gapZ: 2
+                gapZ: 1
 
             },
             {
@@ -143,8 +124,8 @@ var obtenerGuion = function () {
             },
             {
                 from: {
-                    coordX: -500,
-                    coordZ: -500
+                    coordX: -100,
+                    coordZ: -100
                 },
                 to: {
                     coordX: 1,
