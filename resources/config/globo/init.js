@@ -34,7 +34,7 @@ var obtenerGuion = function () {
                     coordZ: -2
                 },
                 to: {
-                    coordX: 20p,
+                    coordX: 200,
                     coordZ: -2
                 },
                 mesh: {
