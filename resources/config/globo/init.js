@@ -30,11 +30,11 @@ var obtenerGuion = function () {
             },
             {
                 from: {
-                    coordX: -50,
+                    coordX: -200,
                     coordZ: -2
                 },
                 to: {
-                    coordX: 50,
+                    coordX: 20p,
                     coordZ: -2
                 },
                 mesh: {
@@ -42,7 +42,7 @@ var obtenerGuion = function () {
                     posY: 0,
                     scale: 0.1
                 },
-                gapX: 5,
+                gapX: 20,
                 gapZ: 1
 
             },
