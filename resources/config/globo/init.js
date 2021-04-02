@@ -87,7 +87,7 @@ var obtenerGuion = function () {
                     model: "oveja",
                     posY: 0,
                     scale: 0.3,
-                    probability: 10
+                    probability: 1
                 }
             },
             {
@@ -103,7 +103,7 @@ var obtenerGuion = function () {
                     model: "gallina",
                     posY: 0,
                     scale: 0.6,
-                    probability: 10
+                    probability: 1
                 }
             },
             {
@@ -119,7 +119,7 @@ var obtenerGuion = function () {
                     model: "vaca",
                     posY: 0,
                     scale: 0.1,
-                    probability: 10
+                    probability: 1
                 }
             },
             {
@@ -139,7 +139,7 @@ var obtenerGuion = function () {
                         coordX: 1000,
                         coordZ: 1000
                     },
-                    probability: 10
+                    probability: 1
                 },
                 gapX: 10,
                 gapZ: 10,
