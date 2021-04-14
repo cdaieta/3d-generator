@@ -5,8 +5,7 @@ var obtenerGuion = function () {
         materialDefault: "materialPisoDefault",
         cameraAnimation: [],
 
-        zones: [
-            {
+        zones: [{
                 material: "horizontalAsphalt",
                 from: {
                     coordX: -200,
@@ -55,71 +54,75 @@ var obtenerGuion = function () {
                     coordX: -15,
                     coordZ: 20
                 },
-                mesh: { model: "granero", posY: 0, scale: 0.3 }
+                mesh: {
+                    model: "granero",
+                    posY: 0,
+                    scale: 0.3
+                }
             },
 
             {
                 from: {
-                    coordX: 1,
-                    coordZ: 2
+                    coordX: -100,
+                    coordZ: 1
                 },
                 to: {
-                    coordX: 10,
-                    coordZ: 20
+                    coordX: 100,
+                    coordZ: 100
                 },
                 mesh: {
                     model: "chancho",
                     posY: 0,
                     scale: 0.6,
-                    probability: 10
+                    probability: 0.01
                 }
             },
             {
                 from: {
-                    coordX: 10,
-                    coordZ: 2
+                    coordX: -100,
+                    coordZ: 1
                 },
                 to: {
-                    coordX: 20,
-                    coordZ: 20
+                    coordX: 100,
+                    coordZ: 100
                 },
                 mesh: {
                     model: "oveja",
                     posY: 0,
                     scale: 0.3,
-                    probability: 1
+                    probability: 0.01
                 }
             },
             {
                 from: {
-                    coordX: 20,
-                    coordZ: 2
+                    coordX: -100,
+                    coordZ: 1
                 },
                 to: {
-                    coordX: 30,
-                    coordZ: 20
+                    coordX: 100,
+                    coordZ: 100
                 },
                 mesh: {
                     model: "gallina",
                     posY: 0,
                     scale: 0.6,
-                    probability: 1
+                    probability: 0.01
                 }
             },
             {
                 from: {
-                    coordX: 30,
-                    coordZ: 2
+                    coordX: -100,
+                    coordZ: 1
                 },
                 to: {
-                    coordX: 40,
-                    coordZ: 20
+                    coordX: 100,
+                    coordZ: 100
                 },
                 mesh: {
                     model: "vaca",
                     posY: 0,
                     scale: 0.1,
-                    probability: 1
+                    probability: 0.01
                 }
             },
             {
