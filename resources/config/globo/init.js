@@ -1,6 +1,6 @@
 var obtenerGuion = function () {
     let json = {
-        velocidad: 2,
+        velocidad: 1,
         duracion: 10,
         materialDefault: "materialPisoDefault",
         cameraAnimation: [],
